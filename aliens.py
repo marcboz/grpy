@@ -44,11 +44,12 @@ class Alien(pygame.sprite.Sprite):
             self.oldtick=currtick
             print("pewpew")
 
-    def collisionCheck(self,projectile_group):
+    def collisionCheck(self,projectile_group,player):
         colprojectile=pygame.sprite.spritecollideany(self,projectile_group)
         if colprojectile:
             if colprojectile.getPtype() != 2:
                 self.reduceHP(colprojectile.getPower())
+                player.incrScore(colprojectile.getPower())
                 colprojectile.kill()
 
     def movement(self,screen_width,screen_height):
@@ -67,7 +68,7 @@ class Alien(pygame.sprite.Sprite):
         self.rect.x=self.x
         self.rect.y=self.y
         self.shoot(projectile_group,player)
-        self.collisionCheck(projectile_group)
+        self.collisionCheck(projectile_group,player)
         self.movement(screen_width,screen_height)
         if self.hp<0 or self.hp==0:
             self.kill()
