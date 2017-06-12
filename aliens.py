@@ -1,12 +1,12 @@
 import pygame,projectiles,playerobj
 
 class Alien(pygame.sprite.Sprite):
-    def __init__(self,hp,speed,power,fr,x,y,dirx,diry):
+    def __init__(self,player,x,y,dirx,diry):
         pygame.sprite.Sprite.__init__(self)
-        self.hp=hp
-        self.speed=speed
-        self.power=power
-        self.fire_rate=fr
+        self.hp=75+(25*player.getLevel())
+        self.speed=0.375+(0.125*player.getLevel())
+        self.power=45+(5*player.getLevel())
+        self.fire_rate=900+(50+player.getLevel())
         self.x=x
         self.y=y
         self.dirx=dirx
@@ -71,4 +71,5 @@ class Alien(pygame.sprite.Sprite):
         self.collisionCheck(projectile_group,player)
         self.movement(screen_width,screen_height)
         if self.hp<0 or self.hp==0:
+            player.addPlayerShield(17.5+(12.5*player.getLevel()))
             self.kill()
