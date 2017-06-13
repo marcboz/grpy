@@ -16,6 +16,8 @@ def main():
     screen=pygame.display.set_mode([screen_width,screen_height])
     key = pygame.key.get_pressed()
 
+    gamepaused=0
+
     background = pygame.Surface(screen.get_size())
     background = background.convert()
     background.fill((15,15,15))
@@ -46,6 +48,7 @@ def main():
     hpt=font1.render("HP:",1,(255,0,0))
     levelt=font1.render("LVL:",1,(255,255,255))
     shieldt=font1.render("SHIELD:",1,(0,0,255))
+    casht=font1.render("CASH:",1,(0,255,0))
 
 
     while 1:
@@ -66,37 +69,45 @@ def main():
                         oldtick=currtick
                         print("pew")
             if event.type == spawnalien:
-                alien=aliens.Alien(player,screen_width-35,random.randint(35,screen_height-35),random.randint(-5,0),random.randint(-5,5))
-                alien_group.add(alien)
+                if gamepaused==0:
+                    alien=aliens.Alien(player,screen_width-35,random.randint(35,screen_height-35),random.randint(-5,0),random.randint(-5,5))
+                    alien_group.add(alien)
             if event.type == spawnmeteor:
-                meteor=meteors.Meteor(1,screen_width-35,random.randint(35,screen_height-35),random.randint(-5,-1),random.randint(-5,5))
-                meteor_group.add(meteor)
-
-
-        player.update()
-        projectile_group.update(screen_width,alien_group,player)
-        alien_group.update(projectile_group,player,screen_width,screen_height)
-        meteor_group.update(player,screen_width,screen_height)
-
-        score=font1.render(str(player.getScore()),1,(255,255,255))
-        hp=font1.render(str(player.getPlayerHP()),1,(255,0,0))
-        level=font1.render(str(player.getLevel()),1,(255,255,255))
-        shield=font1.render(str(player.getPlayerShield()),1,(0,0,255))
+                if gamepaused==0:
+                    meteor=meteors.Meteor(1,screen_width-35,random.randint(35,screen_height-35),random.randint(-5,-1),random.randint(-5,5))
+                    meteor_group.add(meteor)
 
         screen.blit(background,(0,0))
-        screen.blit(scoret,(screen_width-160,15))
-        screen.blit(score,(screen_width-100,15))
-        screen.blit(hpt,(50,15))
-        screen.blit(hp,(80,15))
-        screen.blit(levelt,(140,15))
-        screen.blit(level,(170,15))
-        screen.blit(shieldt,(210,15))
-        screen.blit(shield,(280,15))
-        checkGameOver(gameover,player,screen)
-        playersprite.draw(screen)
-        projectile_group.draw(screen)
-        alien_group.draw(screen)
-        meteor_group.draw(screen)
+
+        if gamepaused==0:
+            player.update()
+            projectile_group.update(screen_width,alien_group,player)
+            alien_group.update(projectile_group,player,screen_width,screen_height)
+            meteor_group.update(player,screen_width,screen_height)
+
+            score=font1.render(str(player.getScore()),1,(255,255,255))
+            hp=font1.render(str(player.getPlayerHP()),1,(255,0,0))
+            level=font1.render(str(player.getLevel()),1,(255,255,255))
+            shield=font1.render(str(player.getPlayerShield()),1,(0,0,255))
+            cash=font1.render(str(player.getPlayerCash()),1,(0,255,0))
+
+
+            screen.blit(scoret,(screen_width-160,15))
+            screen.blit(score,(screen_width-100,15))
+            screen.blit(hpt,(50,15))
+            screen.blit(hp,(80,15))
+            screen.blit(levelt,(140,15))
+            screen.blit(level,(170,15))
+            screen.blit(shieldt,(210,15))
+            screen.blit(shield,(280,15))
+            screen.blit(casht,(320,15))
+            screen.blit(cash,(370,15))
+            checkGameOver(gameover,player,screen)
+            playersprite.draw(screen)
+            projectile_group.draw(screen)
+            alien_group.draw(screen)
+            meteor_group.draw(screen)
+
         pygame.display.update()
 
         clock.tick(60)

@@ -11,6 +11,8 @@ class Player(pygame.sprite.Sprite):
         self.speed=speed
         self.lvl_up_requirement=self.level*500
         self.score=0
+        self.cash=0
+        self.power=50
         self.x=xpos
         self.y=ypos
         self.image=pygame.image.load('images/player.png')
@@ -69,6 +71,24 @@ class Player(pygame.sprite.Sprite):
     def setPlayerSpeed(self,newspeed):
         self.speed=newspeed
 
+    def getPlayerCash(self):
+        return self.cash
+
+    def addCash(self,amount):
+        self.cash+=amount
+
+    def refillHP(self):
+        self.hp=75+self.level*25
+
+    def upgradeShield(self):
+        self.shield_capacity+=50
+
+    def getPlayerPower(self):
+        return self.power
+
+    def upgradeWeapon(self):
+        self.power+=25
+        
     def movement(self):
         key = pygame.key.get_pressed()
 

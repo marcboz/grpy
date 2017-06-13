@@ -72,4 +72,5 @@ class Alien(pygame.sprite.Sprite):
         self.movement(screen_width,screen_height)
         if self.hp<0 or self.hp==0:
             player.addPlayerShield(17.5+(12.5*player.getLevel()))
+            player.addCash(30*player.getLevel())
             self.kill()
