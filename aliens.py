@@ -2,6 +2,7 @@ import pygame,projectiles,playerobj,pickups,random
 
 class Alien(pygame.sprite.Sprite):
     def __init__(self,player,x,y,dirx,diry):
+        """obiekt sprite obcych, wartosci zmiennych statystyk generowana na podstawie poziomu gracza"""
         pygame.sprite.Sprite.__init__(self)
         self.hp=75+(25*player.getLevel())
         self.speed=0.375+(0.125*player.getLevel())
@@ -17,22 +18,28 @@ class Alien(pygame.sprite.Sprite):
         self.rect=self.image.get_rect()
 
     def getxPosition(self):
+        """zwraca pozycje x"""
         return self.x
 
     def getyPostion(self):
+        """zwraca pozycje y"""
         return self.y
 
     def setPosition(self,x,y):
+        """zmienia pozycje x i y"""
         self.x=x
         self.y=y
 
     def getHP(self):
+        """zwraca wartosc hp (health points)"""
         return self.hp
 
     def reduceHP(self,amount):
+        """zmniejsza wartosc hp (health points) o wartosc podana w argumencie amount"""
         self.hp-=amount
 
     def shoot(self,projectile_group,player):
+        """tworzy obiekt projectile i dodaje go do grupy projectile_group"""
         currtick=pygame.time.get_ticks()
         if currtick-self.oldtick>self.fire_rate:
             if player.getxPosition()-self.x<0:
@@ -44,6 +51,7 @@ class Alien(pygame.sprite.Sprite):
             self.oldtick=currtick
 
     def collisionCheck(self,projectile_group,player):
+        """sprawdza czy zaszla kolizja pomiedzy obiektem alien i obiektami z grupy projectile_group, w przypadku kolizji zmniejsza wartosc zmiennej hp obiektu alien i usuwa obiekt z grupy projectile_group z ktorym zaszla kolizja, po czym dodaj punkty do gracza"""
         colprojectile=pygame.sprite.spritecollideany(self,projectile_group)
         if colprojectile:
             if colprojectile.getPtype() != 2:
@@ -52,18 +60,20 @@ class Alien(pygame.sprite.Sprite):
                 colprojectile.kill()
 
     def movement(self,screen_width,screen_height):
+        """nadaje kierunek i predkosc ruchu obiektu alien i dodaje ograniczenia na ramach okna, w przypadku przekroczenia lewej krawedzi okna obiekt zostaje usuniety"""
         self.x+=self.dirx*self.speed
         self.y+=self.diry*self.speed
 
-        if self.y>screen_height:
+        if self.y>=screen_height-32:
             self.diry=self.diry*-1
-        if self.y+32<0:
+        if self.y<=0:
             self.diry=self.diry*-1
         if self.x<0:
             self.kill()
 
 
     def update(self,projectile_group,player,screen_width,screen_height,pickup_group):
+        """aktualizuje pozycje oraz sprawdza kolizje i warunki, wedlug ktorych obiekt zostaje usuniety lub nie"""
         self.rect.x=self.x
         self.rect.y=self.y
         self.shoot(projectile_group,player)

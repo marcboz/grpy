@@ -3,12 +3,14 @@ import pygame,aliens,playerobj,projectiles,meteors,pickups
 class Game:
 
     def checkGameOver(self,text,player,screen):
+        """sprawdza czy wartosc hp gracza osiagnela 0 i w zaleznosci od tego konczy gre"""
         if player.getPlayerHP()==0 or player.getPlayerHP()<0:
             screen.blit(text,(100,200))
 
     def update(self,player,alien_group,projectile_group,screen,background,screen_width,screen_height,playersprite,scoret,gameover,hpt,levelt,shieldt,casht,meteor_group,font1,font2,pickup_group):
+        """aktualizuje gre"""
 
-        player.update()
+        player.update(screen_width,screen_height)
         projectile_group.update(screen_width,alien_group,player)
         alien_group.update(projectile_group,player,screen_width,screen_height,pickup_group)
         meteor_group.update(player,screen_width,screen_height)

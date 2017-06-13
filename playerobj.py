@@ -3,6 +3,7 @@ import pygame
 class Player(pygame.sprite.Sprite):
 
     def __init__(self,xpos,ypos,speed):
+        """obiekt sprite gracza, wartosci zmiennych statystyk generowana na podstawie poziomu gracza"""
         pygame.sprite.Sprite.__init__(self)
         self.hp=100
         self.shield=50
@@ -21,12 +22,11 @@ class Player(pygame.sprite.Sprite):
 
 
     def getLevel(self):
+        """zwraca level (poziom) gracza"""
         return self.level
 
-    def setLevel(self,newlevel):
-        self.level=newlevel
-
     def levelUp(self):
+        """zwieksza poziom gracza o 1 w przypadku gdy score (wynik) osiadnie lvl_up_requirement (warosc score wymagana do nastepnego poziomu)"""
         if self.score>=self.lvl_up_requirement:
             self.level+=1
             self.lvl_up_requirement=self.level*500
@@ -34,31 +34,35 @@ class Player(pygame.sprite.Sprite):
             self.shield=25+self.level*25
 
     def getxPosition(self):
+        """zwraca pozycje x"""
         return self.x
 
     def getyPosition(self):
+        """zwraca pozycje y"""
         return self.y
 
     def setPosition(self,newx,newy):
+        """zmienia pozycje x i y"""
         self.x=newx
         self.y=newy
 
     def getPlayerHP(self):
+        """zwraca wartosc hp (health points)"""
         return self.hp
 
-    def setPlayerHP(self,newhp):
-        self.hp=newhp
-
     def getPlayerShield(self):
+        """zwraca wartosc shield (tarcza)"""
         return self.shield
 
     def addPlayerShield(self,amount):
+        """dodaje punkty shield (tarczy) o wartosc argumentu amount do osiagniecia limitu (shield_capacity)"""
         if self.shield+amount>self.shield_capacity:
             self.shield=self.shield_capacity
         else:
             self.shield+=amount
 
     def reducePlayerHP(self,amount):
+        """zmniejsza wartosc tarczy o wartosc amount, a w przypadku gdy wartosc tarczy jest mniejsza od argumentu amount roznica amount i shield zostaje odjeta od wartosci hp (health points)"""
         if self.shield<amount:
             self.hp-=amount-self.shield
             self.shield=0
@@ -66,52 +70,77 @@ class Player(pygame.sprite.Sprite):
             self.shield-=amount
 
     def getPlayerSpeed(self):
+        """zwraca wartosc speed (predkosc)"""
         return self.speed
 
     def setPlayerSpeed(self,newspeed):
+        """zmienia wartosc speed(predkosc)"""
         self.speed=newspeed
 
     def getPlayerCash(self):
+        """zwraca wartosc cash (pieniadze)"""
         return self.cash
 
     def addCash(self,amount):
+        """zwieksza wartosc cash o wartosc argumentu amount"""
         self.cash+=amount
 
     def reduceCash(self,amount):
+        """zmniejsza wartosc cash o wartosc argumentu amount"""
         self.cash-=amount
 
     def refillHP(self):
+        """ustawia maksymalne hp (health points) w zaleznosci od zmiennej level (poziom)"""
         self.hp=75+self.level*25
 
     def upgradeShield(self):
+        """zwieksza limit tarczy o 50"""
         self.shield_capacity+=50
 
     def getPlayerPower(self):
+        """zwraca wartosc power (sila pocisku)"""
         return self.power
 
     def upgradeWeapon(self):
+        """zwieksza wartosc power o 25"""
         self.power+=25
 
-    def movement(self):
+    def movement(self,screen_width,screen_height):
+        """zmienia pozycje x i y w zaleznosci od zmiennych speed i ograniczen na ramach okna"""
         key = pygame.key.get_pressed()
 
         if key[pygame.K_s]:
-            self.y += self.speed
+            if self.y>=screen_height-32:
+                self.y=screen_height-32
+            else:
+                self.y += self.speed
         elif key[pygame.K_w]:
-            self.y -= self.speed
+            if self.y<=0:
+                self.y=0
+            else:
+                self.y -= self.speed
         if key[pygame.K_d]:
-            self.x += self.speed
+            if self.x>=screen_width-32:
+                self.x=screen_width-32
+            else:
+                self.x += self.speed
         elif key[pygame.K_a]:
-            self.x -= self.speed
+            if self.x<=0:
+                self.x=0
+            else:
+                self.x -= self.speed
 
     def incrScore(self,amount):
+        """zwieksza wartosc score (wynik)"""
         self.score+=amount
 
     def getScore(self):
+        """zwraca wartosc score (wynik)"""
         return self.score
 
-    def update(self):
-        self.movement()
+    def update(self,screen_width,screen_height):
+        """aktualizuje obiekt gracza"""
+        self.movement(screen_width,screen_height)
         self.levelUp()
         self.rect.x=self.x
         self.rect.y=self.y

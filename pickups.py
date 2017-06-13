@@ -2,6 +2,7 @@ import pygame,playerobj
 
 class Pickup(pygame.sprite.Sprite):
     def __init__(self,ptype,x,y):
+        """obiekt sprite pickupow, typ pickupa zalezy od wartosc argumentu ptype, 3 typy pickupow - cash(1) (dodatkowe pieniadze), hp(2) (dodatkowe zycie), shield(3) (dodatkowa tarcza)"""
         pygame.sprite.Sprite.__init__(self)
 
         self.ptype=ptype
@@ -26,6 +27,7 @@ class Pickup(pygame.sprite.Sprite):
             self.rect=self.image.get_rect()
 
     def update(self,player):
+        """aktualizuje obiekt pickup"""
         self.rect.x=self.x
         self.rect.y=self.y
 

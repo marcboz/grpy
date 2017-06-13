@@ -2,6 +2,7 @@ import pygame, playerobj
 
 class Menu:
     def __init__(self):
+        """obiekt menu"""
 
         self.menubg=pygame.image.load('images/menu.png')
         self.menubg.convert()
@@ -36,12 +37,15 @@ class Menu:
 
 
     def getPause(self):
+        """zraca wartosc pause (wartosc od ktorej zalezne jest ktore okno jest wyswietlane(startowe,gry,menu gry))"""
         return self.pause
 
     def setPause(self,to):
+        """zmienia wartosc pause na wartosc argumentu to"""
         self.pause=to
 
     def menuUp(self,player):
+        """funkcja odpowiadajaca za sprawdzanie ktory z przyciskow zostal klikniety (kup hp,kup tarcze,kup ulepszenie broni,wznow gre,wyjdz z gry)"""
         mouse=pygame.mouse.get_pressed()
         mpos=pygame.mouse.get_pos()
 
@@ -88,6 +92,7 @@ class Menu:
 
 
     def menuUpdate(self,player,screen_width,screen_height,screen,casht,cash,background,font):
+        """aktualizuje menu gry"""
         self.menuUp(player)
 
         txt1=font.render("500",1,(0,255,0))
@@ -121,6 +126,7 @@ class Menu:
         screen.blit(txt1,(487,255))
 
     def startMenu(self,screen_width,screen_height,screen,background,player,font):
+        """aktualizuje menu startowe gry"""
         self.menuUp(player)
 
         txt=font.render("SPACE FIGHTER",1,(255,255,255))
