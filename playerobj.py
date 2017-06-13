@@ -77,6 +77,9 @@ class Player(pygame.sprite.Sprite):
     def addCash(self,amount):
         self.cash+=amount
 
+    def reduceCash(self,amount):
+        self.cash-=amount
+
     def refillHP(self):
         self.hp=75+self.level*25
 
@@ -88,7 +91,7 @@ class Player(pygame.sprite.Sprite):
 
     def upgradeWeapon(self):
         self.power+=25
-        
+
     def movement(self):
         key = pygame.key.get_pressed()
 

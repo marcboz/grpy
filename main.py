@@ -1,4 +1,4 @@
-import pygame, playerobj,aliens,projectiles,meteors, sys,random
+import pygame, playerobj,aliens,projectiles,meteors,menuscr, sys,random
 from pygame.locals import *
 
 screen_width=800
@@ -29,6 +29,8 @@ def main():
     clock=pygame.time.Clock()
     oldtick=pygame.time.get_ticks()
 
+    menu=menuscr.Menu()
+
     player=playerobj.Player(200,200,4)
     projectile_group=pygame.sprite.Group()
 
@@ -58,8 +60,7 @@ def main():
                 return
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    return
+                    menu.setPause(1)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     currtick=pygame.time.get_ticks()
@@ -69,17 +70,17 @@ def main():
                         oldtick=currtick
                         print("pew")
             if event.type == spawnalien:
-                if gamepaused==0:
+                if menu.getPause() ==0:
                     alien=aliens.Alien(player,screen_width-35,random.randint(35,screen_height-35),random.randint(-5,0),random.randint(-5,5))
                     alien_group.add(alien)
             if event.type == spawnmeteor:
-                if gamepaused==0:
+                if menu.getPause() ==0:
                     meteor=meteors.Meteor(1,screen_width-35,random.randint(35,screen_height-35),random.randint(-5,-1),random.randint(-5,5))
                     meteor_group.add(meteor)
 
         screen.blit(background,(0,0))
 
-        if gamepaused==0:
+        if menu.getPause()==0:
             player.update()
             projectile_group.update(screen_width,alien_group,player)
             alien_group.update(projectile_group,player,screen_width,screen_height)
@@ -108,8 +109,16 @@ def main():
             alien_group.draw(screen)
             meteor_group.draw(screen)
 
+        if menu.getPause()==1:
+            cash=font1.render(str(player.getPlayerCash()),1,(0,255,0))
+            menu.menuUpdate(player,screen_width,screen_height,screen,casht,cash,background,font1)
+
+
         pygame.display.update()
 
         clock.tick(60)
+        if menu.getPause()==2:
+            pygame.quit()
+            return
 
 if __name__ == '__main__':main()
