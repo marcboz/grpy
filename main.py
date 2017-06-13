@@ -1,13 +1,8 @@
-import pygame, playerobj,aliens,projectiles,meteors,menuscr, sys,random
+import pygame, playerobj,aliens,projectiles,meteors,menuscr,gamec,pickups, sys,random
 from pygame.locals import *
 
 screen_width=800
 screen_height=500
-
-def checkGameOver(text,player,screen):
-    if player.getPlayerHP()==0 or player.getPlayerHP()<0:
-        screen.blit(text,(100,200))
-
 
 def main():
 
@@ -15,8 +10,6 @@ def main():
     pygame.display.set_caption("gra")
     screen=pygame.display.set_mode([screen_width,screen_height])
     key = pygame.key.get_pressed()
-
-    gamepaused=0
 
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -38,10 +31,11 @@ def main():
     pygame.time.set_timer(spawnalien,5000)
 
     spawnmeteor=pygame.USEREVENT+2
-    pygame.time.set_timer(spawnmeteor,5000)
+    pygame.time.set_timer(spawnmeteor,5100-(100*player.getLevel()))
 
     alien_group=pygame.sprite.Group()
     meteor_group=pygame.sprite.Group()
+    pickup_group=pygame.sprite.Group()
 
     playersprite = pygame.sprite.RenderPlain((player))
 
@@ -52,6 +46,8 @@ def main():
     shieldt=font1.render("SHIELD:",1,(0,0,255))
     casht=font1.render("CASH:",1,(0,255,0))
 
+    game=gamec.Game()
+
 
     while 1:
         for event in pygame.event.get():
@@ -60,15 +56,19 @@ def main():
                 return
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    menu.setPause(1)
+                    if menu.getPause()==-1:
+                        menu.setPause(2)
+                    if menu.getPause()==0:
+                        menu.setPause(1)
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     currtick=pygame.time.get_ticks()
                     if currtick-oldtick>800:
-                        nprojectile=projectiles.Projectile(50,5,1,player.getxPosition(),player.getyPosition())
+                        nprojectile=projectiles.Projectile(player.getPlayerPower(),5,1,player.getxPosition(),player.getyPosition())
                         projectile_group.add(nprojectile)
                         oldtick=currtick
-                        print("pew")
+
             if event.type == spawnalien:
                 if menu.getPause() ==0:
                     alien=aliens.Alien(player,screen_width-35,random.randint(35,screen_height-35),random.randint(-5,0),random.randint(-5,5))
@@ -80,34 +80,11 @@ def main():
 
         screen.blit(background,(0,0))
 
+        if menu.getPause()==-1:
+            menu.startMenu(screen_width,screen_height,screen,background,player,font2)
+
         if menu.getPause()==0:
-            player.update()
-            projectile_group.update(screen_width,alien_group,player)
-            alien_group.update(projectile_group,player,screen_width,screen_height)
-            meteor_group.update(player,screen_width,screen_height)
-
-            score=font1.render(str(player.getScore()),1,(255,255,255))
-            hp=font1.render(str(player.getPlayerHP()),1,(255,0,0))
-            level=font1.render(str(player.getLevel()),1,(255,255,255))
-            shield=font1.render(str(player.getPlayerShield()),1,(0,0,255))
-            cash=font1.render(str(player.getPlayerCash()),1,(0,255,0))
-
-
-            screen.blit(scoret,(screen_width-160,15))
-            screen.blit(score,(screen_width-100,15))
-            screen.blit(hpt,(50,15))
-            screen.blit(hp,(80,15))
-            screen.blit(levelt,(140,15))
-            screen.blit(level,(170,15))
-            screen.blit(shieldt,(210,15))
-            screen.blit(shield,(280,15))
-            screen.blit(casht,(320,15))
-            screen.blit(cash,(370,15))
-            checkGameOver(gameover,player,screen)
-            playersprite.draw(screen)
-            projectile_group.draw(screen)
-            alien_group.draw(screen)
-            meteor_group.draw(screen)
+            game.update(player,alien_group,projectile_group,screen,background,screen_width,screen_height,playersprite,scoret,gameover,hpt,levelt,shieldt,casht,meteor_group,font1,font2,pickup_group)
 
         if menu.getPause()==1:
             cash=font1.render(str(player.getPlayerCash()),1,(0,255,0))

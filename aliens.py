@@ -1,4 +1,4 @@
-import pygame,projectiles,playerobj
+import pygame,projectiles,playerobj,pickups,random
 
 class Alien(pygame.sprite.Sprite):
     def __init__(self,player,x,y,dirx,diry):
@@ -42,7 +42,6 @@ class Alien(pygame.sprite.Sprite):
                 nprojectile=projectiles.Projectile(self.power,5,2,self.x+35,self.y+16)
                 projectile_group.add(nprojectile)
             self.oldtick=currtick
-            print("pewpew")
 
     def collisionCheck(self,projectile_group,player):
         colprojectile=pygame.sprite.spritecollideany(self,projectile_group)
@@ -64,7 +63,7 @@ class Alien(pygame.sprite.Sprite):
             self.kill()
 
 
-    def update(self,projectile_group,player,screen_width,screen_height):
+    def update(self,projectile_group,player,screen_width,screen_height,pickup_group):
         self.rect.x=self.x
         self.rect.y=self.y
         self.shoot(projectile_group,player)
@@ -73,4 +72,7 @@ class Alien(pygame.sprite.Sprite):
         if self.hp<0 or self.hp==0:
             player.addPlayerShield(17.5+(12.5*player.getLevel()))
             player.addCash(30*player.getLevel())
+            if random.randint(0,10)>6:
+                pickup=pickups.Pickup(random.randint(1,3),self.x,self.y)
+                pickup_group.add(pickup)
             self.kill()

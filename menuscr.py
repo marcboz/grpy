@@ -6,7 +6,7 @@ class Menu:
         self.menubg=pygame.image.load('images/menu.png')
         self.menubg.convert()
 
-        self.pause=0
+        self.pause=-1
 
         self.hpbtt=pygame.image.load('images/hpbut.png')
         self.hpbtt.convert()
@@ -27,6 +27,10 @@ class Menu:
         self.rebtt=pygame.image.load('images/backbut.png')
         self.rebtt.convert()
         self.rerect=self.rebtt.get_rect()
+
+        self.stbtt=pygame.image.load('images/startbut.png')
+        self.stbtt.convert()
+        self.strect=self.stbtt.get_rect()
 
         self.oldtick=pygame.time.get_ticks()
 
@@ -77,6 +81,11 @@ class Menu:
             if currtick-self.oldtick>500:
                 self.setPause(2)
 
+        if self.strect.collidepoint(mpos) and mouse==(1,0,0):
+            currtick=pygame.time.get_ticks()
+            if currtick-self.oldtick>500:
+                self.setPause(0)
+
 
     def menuUpdate(self,player,screen_width,screen_height,screen,casht,cash,background,font):
         self.menuUp(player)
@@ -110,3 +119,22 @@ class Menu:
         screen.blit(txt3,(387,255))
         screen.blit(txt2,(287,255))
         screen.blit(txt1,(487,255))
+
+    def startMenu(self,screen_width,screen_height,screen,background,player,font):
+        self.menuUp(player)
+
+        txt=font.render("SPACE FIGHTER",1,(255,255,255))
+
+        windowx=screen_width/2-200
+        windowy=screen_height/2-125
+
+        self.exrect.x=360
+        self.exrect.y=290
+
+        self.strect.x=350
+        self.strect.y=250
+
+        screen.blit(background,(0,0))
+        screen.blit(txt,(0,20))
+        screen.blit(self.stbtt,(self.strect.x,self.strect.y))
+        screen.blit(self.exbtt,(self.exrect.x,self.exrect.y))
