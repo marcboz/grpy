@@ -28,10 +28,8 @@ def main():
     projectile_group=pygame.sprite.Group()
 
     spawnalien=pygame.USEREVENT+1
-    pygame.time.set_timer(spawnalien,5000)
-
     spawnmeteor=pygame.USEREVENT+2
-    pygame.time.set_timer(spawnmeteor,5100-(100*player.getLevel()))
+
 
     alien_group=pygame.sprite.Group()
     meteor_group=pygame.sprite.Group()
@@ -48,6 +46,7 @@ def main():
 
     game=gamec.Game()
 
+    oldlvl=0
 
     while 1:
         for event in pygame.event.get():
@@ -71,12 +70,17 @@ def main():
 
             if event.type == spawnalien:
                 if menu.getPause() ==0:
-                    alien=aliens.Alien(player,screen_width-35,random.randint(35,screen_height-35),random.randint(-5,0),random.randint(-5,5))
+                    alien=aliens.Alien(player,screen_width-35,random.randint(35,screen_height-35),random.randint(-5,-1),random.randint(-5,5))
                     alien_group.add(alien)
             if event.type == spawnmeteor:
                 if menu.getPause() ==0:
-                    meteor=meteors.Meteor(1,screen_width-35,random.randint(35,screen_height-35),random.randint(-5,-1),random.randint(-5,5))
+                    meteor=meteors.Meteor(screen_width-35,random.randint(35,screen_height-35),random.randint(-5,-1),random.randint(-5,5),player)
                     meteor_group.add(meteor)
+
+        if oldlvl<player.getLevel() and 5000-(200*player.getLevel())>=1000:
+            pygame.time.set_timer(spawnalien,5000-(150*player.getLevel()))
+            pygame.time.set_timer(spawnmeteor,5100-(150*player.getLevel()))
+            oldlvl=player.getLevel()
 
         screen.blit(background,(0,0))
 

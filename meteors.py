@@ -1,10 +1,10 @@
 import pygame,playerobj
 
 class Meteor(pygame.sprite.Sprite):
-    def __init__(self,speed,x,y,dirx,diry):
+    def __init__(self,x,y,dirx,diry,player):
         """obiekt sprite asteroid"""
         pygame.sprite.Sprite.__init__(self)
-        self.speed=speed
+        self.speed=0.9+(0.1*player.getLevel())
         self.x=x
         self.y=y
         self.dirx=dirx

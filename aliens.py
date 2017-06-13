@@ -5,9 +5,12 @@ class Alien(pygame.sprite.Sprite):
         """obiekt sprite obcych, wartosci zmiennych statystyk generowana na podstawie poziomu gracza"""
         pygame.sprite.Sprite.__init__(self)
         self.hp=75+(25*player.getLevel())
-        self.speed=0.375+(0.125*player.getLevel())
+        self.speed=0.40+(0.05*player.getLevel())
         self.power=45+(5*player.getLevel())
-        self.fire_rate=900+(50+player.getLevel())
+        if 1000-(75*player.getLevel())>=250:
+            self.fire_rate=1000-(75*player.getLevel())
+        else:
+            self.fire_rate=250
         self.x=x
         self.y=y
         self.dirx=dirx
